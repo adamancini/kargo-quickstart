@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: guestbook
+  namespace: argocd
+spec:
+  generators:
+    - matrix:
+        generators:
+          - clusters:
+              selector:
+                matchExpressions:
+                - {key: akuity.io/argo-cd-cluster-name, operator: NotIn, values: [in-cluster]}
+          - list:
+              elements:
+              - env: dev
+              - env: staging
+              - env: prod
+  template:
+    metadata:
+      name: 'guestbook-simple-{{env}}'
+      annotations:
+        kargo.akuity.io/authorized-stage: kargo-simple:{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/<repo>
+        targetRevision: env/{{env}}
+        path: .
+      destination:
+        name: '{{name}}'
+        namespace: 'guestbook-simple-{{env}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true

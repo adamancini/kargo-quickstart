@@ -1,0 +1,8 @@
+apiVersion: argocd.akuity.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: my-argocd-instance
+spec:
+  description: "Argo CD Instance for Kargo Quickstart"
+  instanceSpec: {}
+  version: v2.10.9
