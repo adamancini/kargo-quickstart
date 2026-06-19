@@ -14,9 +14,9 @@ spec:
     spec:
       vars:
       - name: gitRepo
-        value: https://github.com/<repo>
+        value: https://github.com/adamancini/kargo-quickstart
       - name: imageRepo
-        value: ghcr.io/<user>/guestbook
+        value: ghcr.io/adamancini/guestbook
       steps:
       - uses: git-clone
         config:
@@ -75,9 +75,9 @@ spec:
     spec:
       vars:
       - name: gitRepo
-        value: https://github.com/<repo>
+        value: https://github.com/adamancini/kargo-quickstart
       - name: imageRepo
-        value: ghcr.io/<user>/guestbook
+        value: ghcr.io/adamancini/guestbook
       steps:
       - uses: git-clone
         config:
@@ -136,9 +136,9 @@ spec:
     spec:
       vars:
       - name: gitRepo
-        value: https://github.com/<repo>
+        value: https://github.com/adamancini/kargo-quickstart
       - name: imageRepo
-        value: ghcr.io/<user>/guestbook
+        value: ghcr.io/adamancini/guestbook
       steps:
       - uses: git-clone
         config:
