@@ -1,0 +1,100 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: akkoma
+  annotations:
+    kargo.akuity.io/color: red
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: akkoma-charts
+      sources:
+        direct: true
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: argocd-update
+          config:
+            apps:
+              - name: akkoma-{{ctx.stage}}
+                namespace: argocd
+                sources:
+                  - repoURL: "ghcr.io/adamancini/charts"
+                    chart: akkoma
+                    desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
+              - name: soju-{{ctx.stage}}
+                namespace: argocd
+                sources:
+                  - repoURL: "ghcr.io/adamancini/charts"
+                    chart: soju
+                    desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: akkoma
+  annotations:
+    kargo.akuity.io/color: yellow
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: akkoma-charts
+      sources:
+        stages:
+          - dev
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: argocd-update
+          config:
+            apps:
+              - name: akkoma-{{ctx.stage}}
+                namespace: argocd
+                sources:
+                  - repoURL: "ghcr.io/adamancini/charts"
+                    chart: akkoma
+                    desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
+              - name: soju-{{ctx.stage}}
+                namespace: argocd
+                sources:
+                  - repoURL: "ghcr.io/adamancini/charts"
+                    chart: soju
+                    desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: akkoma
+  annotations:
+    kargo.akuity.io/color: blue
+spec:
+  requestedFreight:
+    - origin:
+        kind: Warehouse
+        name: akkoma-charts
+      sources:
+        stages:
+          - staging
+  promotionTemplate:
+    spec:
+      steps:
+        - uses: argocd-update
+          config:
+            apps:
+              - name: akkoma-{{ctx.stage}}
+                namespace: argocd
+                sources:
+                  - repoURL: "ghcr.io/adamancini/charts"
+                    chart: akkoma
+                    desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
+              - name: soju-{{ctx.stage}}
+                namespace: argocd
+                sources:
+                  - repoURL: "ghcr.io/adamancini/charts"
+                    chart: soju
+                    desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}

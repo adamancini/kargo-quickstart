@@ -1,0 +1,29 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: httproutes
+#   namespace: argocd
+# spec:
+#   generators:
+#     - list:
+#         elements:
+#           - stage: dev
+#           - stage: staging
+#           - stage: prod
+#   template:
+#     metadata:
+#       name: "httproutes-{{stage}}"
+#       namespace: argocd
+#     spec:
+#       project: default
+#       source:
+#         repoURL: https://github.com/adamancini/fleet-infra
+#         targetRevision: main
+#         path: apps/routes/{{stage}}
+#       destination:
+#         server: https://kubernetes.default.svc
+#         namespace: akkoma-{{stage}}
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true

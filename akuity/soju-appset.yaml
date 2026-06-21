@@ -1,0 +1,63 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: soju
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - stage: dev
+            cluster_domain: dev.annarchy.net
+            default_storage_class: local-path
+          - stage: staging
+            cluster_domain: staging.annarchy.net
+            default_storage_class: local-path
+          - stage: prod
+            cluster_domain: annarchy.net
+            default_storage_class: longhorn
+  template:
+    metadata:
+      name: "soju-{{stage}}"
+      namespace: argocd
+      annotations:
+        kargo.akuity.io/authorized-stage: "akkoma:{{stage}}"
+    spec:
+      project: default
+      source:
+        repoURL: ghcr.io/adamancini/charts
+        chart: soju
+        targetRevision: "*"
+        helm:
+          valuesObject:
+            soju:
+              domain: "irc.{{cluster_domain}}"
+              title: "annarchy IRC bouncer"
+            admin:
+              enabled: false
+            ingress:
+              enabled: false
+            certificate:
+              enabled: true
+            listeners:
+              ircs: true
+              irc: true
+              websocket: true
+              metrics: true
+              metricsHost: "localhost"
+              admin: false
+            persistence:
+              storageClass: "{{default_storage_class}}"
+            gamja:
+              enabled: true
+              server:
+                autojoin: "#annarchy"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "soju-{{stage}}"
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

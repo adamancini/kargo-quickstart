@@ -1,0 +1,22 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Project
+metadata:
+  name: akkoma
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: ProjectConfig
+metadata:
+  name: akkoma
+  namespace: akkoma
+spec:
+  promotionPolicies:
+    # dev auto-promotes whenever new freight is available
+    - stage: dev
+      autoPromotionEnabled: true
+    # staging and prod require manual promotion (default: false)
+    - stage: staging
+      autoPromotionEnabled: false
+    - stage: prod
+      autoPromotionEnabled: false

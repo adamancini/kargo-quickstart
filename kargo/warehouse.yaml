@@ -7,4 +7,5 @@ spec:
   subscriptions:
   - image:
       repoURL: ghcr.io/adamancini/guestbook
+      tagSelectionStrategy: SemVer
       discoveryLimit: 5

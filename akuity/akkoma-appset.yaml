@@ -5,33 +5,75 @@ metadata:
   namespace: argocd
 spec:
   generators:
-  - matrix:
-      generators:
-      - clusters:
-          selector:
-            matchExpressions:
-            - {key: akuity.io/argo-cd-cluster-name, operator: NotIn, values: [in-cluster]}
-      - list:
-          elements:
-          - env: dev
-          - env: staging
-          - env: prod
+    - list:
+        elements:
+          - stage: dev
+            cluster_domain: dev.annarchy.net
+            default_storage_class: local-path
+          - stage: staging
+            cluster_domain: staging.annarchy.net
+            default_storage_class: local-path
+          - stage: prod
+            cluster_domain: annarchy.net
+            default_storage_class: longhorn
   template:
     metadata:
-      name: akkoma-{{env}}
+      name: "akkoma-{{stage}}"
+      namespace: argocd
       annotations:
-        kargo.akuity.io/authorized-stage: default:{{env}}
+        kargo.akuity.io/authorized-stage: "fediverse:{{stage}}"
     spec:
       project: default
       source:
-        repoURL: https://github.com/adamancini/kargo-quickstart
-        targetRevision: env/{{env}}
+        repoURL: ghcr.io/adamancini/charts
+        chart: akkoma
+        targetRevision: "*"
+        helm:
+          valuesObject:
+            ingress:
+              enabled: false
+            resources:
+              requests:
+                cpu: 25m
+                memory: 384Mi
+              limits:
+                memory: 768Mi
+            akkoma:
+              domain: "akkoma.{{cluster_domain}}"
+              adminEmail: root@annarchy.net
+            postgresql:
+              resources:
+                requests:
+                  cpu: 25m
+                  memory: 96Mi
+                limits:
+                  memory: 256Mi
+              storageClass: "{{default_storage_class}}"
+            storage:
+              uploads:
+                storageClass: "{{default_storage_class}}"
+              frontends:
+                storageClass: "{{default_storage_class}}"
+            metrics:
+              enabled: true
+              serviceMonitor:
+                enabled: true
+                labels:
+                  release: kube-prometheus-stack
+              grafana:
+                enabled: true
+            mediaPruning:
+              enabled: true
+            networkPolicy:
+              enabled: true
+              ingressControllerLabels:
+                kubernetes.io/metadata.name: traefik
       destination:
-        namespace: akkoma-{{env}}
-        name: '{{name}}'
+        server: https://kubernetes.default.svc
+        namespace: "akkoma-{{stage}}"
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
-        - CreateNamespace=true
+          - CreateNamespace=true
