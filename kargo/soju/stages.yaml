@@ -18,6 +18,27 @@ spec:
         - name: gitRepo
           value: https://github.com/adamancini/kargo-quickstart
       steps:
+        - uses: git-clone
+          config:
+            repoURL: ${{ vars.gitRepo }}
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: yaml-update
+          config:
+            path: ./repo/akuity/soju-appset.yaml
+            updates:
+              - key: spec.generators.0.list.elements.0.chart_version
+                value: ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
+        - uses: git-commit
+          config:
+            path: ./repo
+            message: >-
+              chore: promote soju ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }} to dev
+        - uses: git-push
+          config:
+            path: ./repo
+            targetBranch: main
         - uses: argocd-update
           config:
             apps:
@@ -49,6 +70,27 @@ spec:
         - name: gitRepo
           value: https://github.com/adamancini/kargo-quickstart
       steps:
+        - uses: git-clone
+          config:
+            repoURL: ${{ vars.gitRepo }}
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: yaml-update
+          config:
+            path: ./repo/akuity/soju-appset.yaml
+            updates:
+              - key: spec.generators.0.list.elements.1.chart_version
+                value: ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
+        - uses: git-commit
+          config:
+            path: ./repo
+            message: >-
+              chore: promote soju ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }} to staging
+        - uses: git-push
+          config:
+            path: ./repo
+            targetBranch: main
         - uses: argocd-update
           config:
             apps:
@@ -90,14 +132,13 @@ spec:
           config:
             path: ./repo/akuity/soju-appset.yaml
             updates:
-              - key: spec.template.spec.source.targetRevision
+              - key: spec.generators.0.list.elements.2.chart_version
                 value: ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
         - uses: git-commit
           config:
             path: ./repo
             message: >-
-              chore: update soju AppSet bootstrap version to
-              ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
+              chore: promote soju ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }} to prod
         - uses: git-push
           config:
             path: ./repo

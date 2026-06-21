@@ -4,21 +4,21 @@ metadata:
   name: soju
   namespace: argocd
 spec:
-  ignoreApplicationDifferences:
-    - jsonPointers:
-        - /spec/source/targetRevision
   generators:
     - list:
         elements:
           - stage: dev
             cluster_domain: dev.annarchy.net
             default_storage_class: local-path
+            chart_version: "0.1.7"
           - stage: staging
             cluster_domain: staging.annarchy.net
             default_storage_class: local-path
+            chart_version: "0.1.7"
           - stage: prod
             cluster_domain: annarchy.net
             default_storage_class: local-path
+            chart_version: "0.1.7"
   template:
     metadata:
       name: "soju-{{stage}}"
@@ -30,7 +30,7 @@ spec:
       source:
         repoURL: ghcr.io/adamancini/charts
         chart: soju
-        targetRevision: "0.1.7"
+        targetRevision: "{{chart_version}}"
         helm:
           valuesObject:
             soju:

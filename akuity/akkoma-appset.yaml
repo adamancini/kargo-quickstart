@@ -4,21 +4,21 @@ metadata:
   name: akkoma
   namespace: argocd
 spec:
-  ignoreApplicationDifferences:
-    - jsonPointers:
-        - /spec/source/targetRevision
   generators:
     - list:
         elements:
           - stage: dev
             cluster_domain: dev.annarchy.net
             default_storage_class: local-path
+            chart_version: "0.4.5"
           - stage: staging
             cluster_domain: staging.annarchy.net
             default_storage_class: local-path
+            chart_version: "0.4.4"
           - stage: prod
             cluster_domain: annarchy.net
             default_storage_class: local-path
+            chart_version: "0.4.4"
   template:
     metadata:
       name: "akkoma-{{stage}}"
@@ -30,7 +30,7 @@ spec:
       source:
         repoURL: ghcr.io/adamancini/charts
         chart: akkoma
-        targetRevision: "0.4.4"
+        targetRevision: "{{chart_version}}"
         helm:
           valuesObject:
             secrets:
