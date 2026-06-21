@@ -22,7 +22,7 @@ spec:
       annotations:
         kargo.akuity.io/authorized-stage: kargo-simple:{{env}}
     spec:
-      project: default
+      project: kargo-simple
       source:
         repoURL: https://github.com/adamancini/kargo-quickstart
         targetRevision: env/{{env}}

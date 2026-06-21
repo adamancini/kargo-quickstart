@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: akkoma
+  namespace: argocd
+spec:
+  generators:
+  - matrix:
+      generators:
+      - clusters:
+          selector:
+            matchExpressions:
+            - {key: akuity.io/argo-cd-cluster-name, operator: NotIn, values: [in-cluster]}
+      - list:
+          elements:
+          - env: dev
+          - env: staging
+          - env: prod
+  template:
+    metadata:
+      name: akkoma-{{env}}
+      annotations:
+        kargo.akuity.io/authorized-stage: default:{{env}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/adamancini/kargo-quickstart
+        targetRevision: env/{{env}}
+      destination:
+        namespace: akkoma-{{env}}
+        name: '{{name}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - CreateNamespace=true
