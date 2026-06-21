@@ -24,7 +24,7 @@ spec:
       name: "soju-{{stage}}"
       namespace: argocd
       annotations:
-        kargo.akuity.io/authorized-stage: "akkoma:{{stage}}"
+        kargo.akuity.io/authorized-stage: "soju:{{stage}}"
     spec:
       project: default
       source:
