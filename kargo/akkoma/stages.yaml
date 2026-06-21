@@ -14,6 +14,9 @@ spec:
         direct: true
   promotionTemplate:
     spec:
+      vars:
+        - name: gitRepo
+          value: https://github.com/adamancini/kargo-quickstart
       steps:
         - uses: argocd-update
           config:
@@ -48,6 +51,9 @@ spec:
           - dev
   promotionTemplate:
     spec:
+      vars:
+        - name: gitRepo
+          value: https://github.com/adamancini/kargo-quickstart
       steps:
         - uses: argocd-update
           config:
@@ -82,7 +88,39 @@ spec:
           - staging
   promotionTemplate:
     spec:
+      vars:
+        - name: gitRepo
+          value: https://github.com/adamancini/kargo-quickstart
       steps:
+        - uses: git-clone
+          config:
+            repoURL: ${{ vars.gitRepo }}
+            checkout:
+              - branch: main
+                path: ./repo
+        - uses: yaml-update
+          config:
+            path: ./repo/akuity/akkoma-appset.yaml
+            updates:
+              - key: spec.template.spec.source.targetRevision
+                value: ${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
+        - uses: yaml-update
+          config:
+            path: ./repo/akuity/soju-appset.yaml
+            updates:
+              - key: spec.template.spec.source.targetRevision
+                value: ${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
+        - uses: git-commit
+          config:
+            path: ./repo
+            message: >-
+              chore: update AppSet bootstrap versions
+              akkoma=${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
+              soju=${{ chartFrom("oci://ghcr.io/adamancini/charts/soju").Version }}
+        - uses: git-push
+          config:
+            path: ./repo
+            targetBranch: main
         - uses: argocd-update
           config:
             apps:
