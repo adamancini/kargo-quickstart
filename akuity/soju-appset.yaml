@@ -18,7 +18,7 @@ spec:
             default_storage_class: local-path
           - stage: prod
             cluster_domain: annarchy.net
-            default_storage_class: longhorn
+            default_storage_class: local-path
   template:
     metadata:
       name: "soju-{{stage}}"

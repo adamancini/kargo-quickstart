@@ -92,7 +92,7 @@ The prod stage writes promoted chart versions back to `akuity/akkoma-appset.yaml
 |---|---|---|---|
 | dev | `akkoma.dev.annarchy.net` | `irc.dev.annarchy.net` | `local-path` |
 | staging | `akkoma.staging.annarchy.net` | `irc.staging.annarchy.net` | `local-path` |
-| prod | `akkoma.annarchy.net` | `irc.annarchy.net` | `longhorn` |
+| prod | `akkoma.annarchy.net` | `irc.annarchy.net` | `local-path` |
 
 ---
 
@@ -136,7 +136,7 @@ All AppSet destinations use `name: kargo-quickstart` instead of `server: https:/
 
 - Cluster is running k3d with Traefik pre-installed in `kube-system` (k3d default).
 - Kargo has credentials to push to GitHub (for git-writeback on prod) and pull from `ghcr.io/adamancini/charts`.
-- Longhorn is installed in the prod cluster for `storageClass: longhorn`. In dev/staging, `local-path` (k3d default) is used.
+- All three stages run on the same k3d cluster (different namespaces only). k3d ships with `local-path` as the only storage class, so all stages use it.
 - The Kargo project is named `akkoma` and the ArgoCD Application names follow `akkoma-<stage>` / `soju-<stage>` patterns.
 
 ---
