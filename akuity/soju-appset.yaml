@@ -40,7 +40,7 @@ spec:
             certificate:
               enabled: false
             listeners:
-              ircs: true
+              ircs: false
               irc: true
               websocket: true
               metrics: true
