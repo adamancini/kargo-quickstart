@@ -14,7 +14,7 @@ spec:
           - stage: staging
             cluster_domain: staging.annarchy.net
             default_storage_class: local-path
-            chart_version: "0.4.4"
+            chart_version: 0.4.5
           - stage: prod
             cluster_domain: annarchy.net
             default_storage_class: local-path
