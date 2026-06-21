@@ -18,13 +18,13 @@ spec:
         - uses: argocd-update
           config:
             apps:
-              - name: akkoma-{{ctx.stage}}
+              - name: akkoma-${{ ctx.stage }}
                 namespace: argocd
                 sources:
                   - repoURL: "ghcr.io/adamancini/charts"
                     chart: akkoma
                     desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
-              - name: soju-{{ctx.stage}}
+              - name: soju-${{ ctx.stage }}
                 namespace: argocd
                 sources:
                   - repoURL: "ghcr.io/adamancini/charts"
@@ -52,13 +52,13 @@ spec:
         - uses: argocd-update
           config:
             apps:
-              - name: akkoma-{{ctx.stage}}
+              - name: akkoma-${{ ctx.stage }}
                 namespace: argocd
                 sources:
                   - repoURL: "ghcr.io/adamancini/charts"
                     chart: akkoma
                     desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
-              - name: soju-{{ctx.stage}}
+              - name: soju-${{ ctx.stage }}
                 namespace: argocd
                 sources:
                   - repoURL: "ghcr.io/adamancini/charts"
@@ -86,13 +86,13 @@ spec:
         - uses: argocd-update
           config:
             apps:
-              - name: akkoma-{{ctx.stage}}
+              - name: akkoma-${{ ctx.stage }}
                 namespace: argocd
                 sources:
                   - repoURL: "ghcr.io/adamancini/charts"
                     chart: akkoma
                     desiredRevision: ${{ chartFrom("oci://ghcr.io/adamancini/charts/akkoma").Version }}
-              - name: soju-{{ctx.stage}}
+              - name: soju-${{ ctx.stage }}
                 namespace: argocd
                 sources:
                   - repoURL: "ghcr.io/adamancini/charts"

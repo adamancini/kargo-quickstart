@@ -53,7 +53,7 @@ spec:
               server:
                 autojoin: "#annarchy"
       destination:
-        server: https://kubernetes.default.svc
+        name: kargo-quickstart
         namespace: "soju-{{stage}}"
       syncPolicy:
         automated:

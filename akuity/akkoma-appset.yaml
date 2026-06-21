@@ -21,7 +21,7 @@ spec:
       name: "akkoma-{{stage}}"
       namespace: argocd
       annotations:
-        kargo.akuity.io/authorized-stage: "fediverse:{{stage}}"
+        kargo.akuity.io/authorized-stage: "akkoma:{{stage}}"
     spec:
       project: default
       source:
@@ -69,7 +69,7 @@ spec:
               ingressControllerLabels:
                 kubernetes.io/metadata.name: traefik
       destination:
-        server: https://kubernetes.default.svc
+        name: kargo-quickstart
         namespace: "akkoma-{{stage}}"
       syncPolicy:
         automated:
