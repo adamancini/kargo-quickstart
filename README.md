@@ -161,6 +161,22 @@ kubectl get applications -n argocd
 kubectl get stages -n akkoma
 ```
 
+## Local Access (Port Forwarding)
+
+All three stages run on the same k3d cluster. A `Makefile` is provided to forward app ports to localhost for browser access:
+
+```bash
+make pf          # start all port forwards
+make pf-dev      # akkoma dev only      → http://localhost:4000
+make pf-staging  # akkoma staging only  → http://localhost:4001
+make pf-prod     # akkoma prod only     → http://localhost:4002
+make pf-soju     # soju gamja web IRC   → http://localhost:8080
+make pf-stop     # kill all port forwards
+make pf-status   # show active forwards
+```
+
+**Note:** The `akkoma-dev` Service selector matches both the app pod and the postgres pod (both share `app.kubernetes.io/name=akkoma`). The Makefile uses `app.kubernetes.io/component!=database` to target only the app pod, and resolves the pod name dynamically so it survives pod restarts.
+
 ---
 
 ## Troubleshooting Notes
