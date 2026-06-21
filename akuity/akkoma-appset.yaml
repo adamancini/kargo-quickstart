@@ -30,9 +30,13 @@ spec:
       source:
         repoURL: ghcr.io/adamancini/charts
         chart: akkoma
-        targetRevision: "0.4.2"
+        targetRevision: "0.4.4"
         helm:
           valuesObject:
+            secrets:
+              secretKeyBase: "mukL1ZtJyIOTuW0x5y9IFBsugJIk4R8AZay4AJHR8tPzAofsNeeStyBwuODNpVlu"
+              signingSalt: "ZvRrORag"
+              releaseCookie: "j9c6P8Z1lmrKM2yrCJtjepqsE0STxkKhdPUA9B4JWr935sMvYvzdP4mC2FVbHlaT"
             ingress:
               enabled: true
               className: traefik
@@ -51,6 +55,7 @@ spec:
               domain: "akkoma.{{cluster_domain}}"
               adminEmail: root@annarchy.net
             postgresql:
+              password: "g25vOQGMYysqFtOqRH8uiqy3OPzTUEMn"
               resources:
                 requests:
                   cpu: 25m
@@ -75,17 +80,6 @@ spec:
               enabled: true
               ingressControllerLabels:
                 kubernetes.io/metadata.name: traefik
-      ignoreDifferences:
-        - group: ""
-          kind: Secret
-          name: "akkoma-{{stage}}-postgresql"
-          jsonPointers:
-            - /data/postgres-password
-        - group: ""
-          kind: Secret
-          name: "akkoma-{{stage}}-secrets"
-          jsonPointers:
-            - /data
       destination:
         name: kargo-quickstart
         namespace: "akkoma-{{stage}}"
@@ -95,4 +89,3 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
-          - RespectIgnoreDifferences=true

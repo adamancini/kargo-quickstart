@@ -30,7 +30,7 @@ spec:
       source:
         repoURL: ghcr.io/adamancini/charts
         chart: soju
-        targetRevision: "0.1.5"
+        targetRevision: "0.1.7"
         helm:
           valuesObject:
             soju:
