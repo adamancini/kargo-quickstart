@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-issuers
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/adamancini/kargo-quickstart
+    targetRevision: main
+    path: infra/cert-manager
+  destination:
+    name: kargo-quickstart
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

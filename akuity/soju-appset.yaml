@@ -38,9 +38,9 @@ spec:
             ingress:
               enabled: false
             certificate:
-              enabled: false
+              enabled: true
             listeners:
-              ircs: false
+              ircs: true
               irc: true
               websocket: true
               metrics: true

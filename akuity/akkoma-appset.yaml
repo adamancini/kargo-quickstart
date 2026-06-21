@@ -31,7 +31,13 @@ spec:
         helm:
           valuesObject:
             ingress:
-              enabled: false
+              enabled: true
+              className: traefik
+              annotations:
+                cert-manager.io/cluster-issuer: letsencrypt
+              tls:
+                enabled: true
+                secretName: akkoma-tls
             resources:
               requests:
                 cpu: 25m
