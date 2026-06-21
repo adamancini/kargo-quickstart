@@ -1,4 +1,31 @@
-.PHONY: pf pf-dev pf-staging pf-prod pf-soju pf-stop pf-status
+.PHONY: apply apply-argocd apply-kargo commit push pf pf-dev pf-staging pf-prod pf-soju pf-stop pf-status
+
+## ── Apply ────────────────────────────────────────────────────────────────────
+
+apply: apply-argocd apply-kargo
+
+apply-argocd:
+	akuity argocd apply -f akuity
+
+apply-kargo:
+	kargo apply -f kargo
+	kargo apply -f kargo/akkoma
+	kargo apply -f kargo/soju
+
+## ── Git ──────────────────────────────────────────────────────────────────────
+
+MSG ?= chore: update configuration
+
+commit:
+	git add -A
+	git commit -m "$(MSG)"
+
+push:
+	git push
+
+sync: apply commit push
+
+## ── Port forwarding ──────────────────────────────────────────────────────────
 
 # Port assignments
 # akkoma-dev      → :4000
