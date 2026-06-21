@@ -75,6 +75,17 @@ spec:
               enabled: true
               ingressControllerLabels:
                 kubernetes.io/metadata.name: traefik
+      ignoreDifferences:
+        - group: ""
+          kind: Secret
+          name: "akkoma-{{stage}}-postgresql"
+          jsonPointers:
+            - /data/postgres-password
+        - group: ""
+          kind: Secret
+          name: "akkoma-{{stage}}-secrets"
+          jsonPointers:
+            - /data
       destination:
         name: kargo-quickstart
         namespace: "akkoma-{{stage}}"
@@ -84,3 +95,4 @@ spec:
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+          - RespectIgnoreDifferences=true
