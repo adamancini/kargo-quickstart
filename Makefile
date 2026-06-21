@@ -18,7 +18,7 @@ MSG ?= chore: update configuration
 
 commit:
 	git add -A
-	git commit -m "$(MSG)"
+	git diff --cached --quiet && echo "nothing to commit" || git commit -m "$(MSG)"
 
 push:
 	git push
