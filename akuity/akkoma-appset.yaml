@@ -4,6 +4,9 @@ metadata:
   name: akkoma
   namespace: argocd
 spec:
+  ignoreApplicationDifferences:
+    - jsonPointers:
+        - /spec/source/targetRevision
   generators:
     - list:
         elements:
@@ -27,7 +30,7 @@ spec:
       source:
         repoURL: ghcr.io/adamancini/charts
         chart: akkoma
-        targetRevision: "*"
+        targetRevision: "0.4.2"
         helm:
           valuesObject:
             ingress:

@@ -4,6 +4,9 @@ metadata:
   name: soju
   namespace: argocd
 spec:
+  ignoreApplicationDifferences:
+    - jsonPointers:
+        - /spec/source/targetRevision
   generators:
     - list:
         elements:
@@ -27,7 +30,7 @@ spec:
       source:
         repoURL: ghcr.io/adamancini/charts
         chart: soju
-        targetRevision: "*"
+        targetRevision: "0.1.5"
         helm:
           valuesObject:
             soju:
